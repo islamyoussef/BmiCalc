@@ -1,0 +1,4 @@
+#Tue Mar 11 20:44:16 EET 2025
+base.0=E\:\\HelpCode\\blackhourses\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
