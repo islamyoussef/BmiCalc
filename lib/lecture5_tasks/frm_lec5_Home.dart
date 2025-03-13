@@ -31,6 +31,13 @@ class FrmLec5Home extends StatelessWidget {
             BtnElevated(text: "Task 3 - Vocabulary Notes", onPressed: (){
               Navigator.pushNamed(context, '/Lec5VocaApp');
             }),
+
+            const SizedBox(height: 50,),
+            OutlinedButton(onPressed: (){
+              Navigator.popAndPushNamed(context, '/Navigator');
+            },
+                child: const Icon(Icons.home,color: Colors.orange,size: 50,)
+            )
           ],
         ),
       ),
