@@ -15,7 +15,6 @@ class FrmTestApi extends StatefulWidget {
 }
 
 class _FrmTestApiState extends State<FrmTestApi> {
-
   List<dynamic> topHeadlines = [];
   bool _isLoading = true;
 
@@ -31,25 +30,28 @@ class _FrmTestApiState extends State<FrmTestApi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar.customAppbar(),
-
-        body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListView.builder(
-              itemCount: topHeadlines.length,
-              itemBuilder: (context, index) {
-                //Text('${topHeadlines[index]['title']}');
-                return CustomSingleNews(
-                    title: topHeadlines[index]['title']?? 'No Title Loaded',
-                    details: topHeadlines[index]['content']?? 'No Content Loaded',
-                    authorName: topHeadlines[index]['author'] ?? 'No Author Name Loaded',
-                    noOfComments: index,
-                    noOfViews: index,
-                    imagePath: topHeadlines[index]['urlToImage'] ?? 'https://picsum.photos/400?random=$index');
-              },
-            )
-            /*********************/
-            ));
+      appBar: CustomAppBar.customAppbar(context,true),
+      body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListView.builder(
+            itemCount: topHeadlines.length,
+            itemBuilder: (context, index) {
+              //Text('${topHeadlines[index]['title']}');
+              return CustomSingleNews(
+                  title: topHeadlines[index]['title'] ?? 'No Title Loaded',
+                  details:
+                      topHeadlines[index]['content'] ?? 'No Content Loaded',
+                  authorName:
+                      topHeadlines[index]['author'] ?? 'No Author Name Loaded',
+                  noOfComments: index,
+                  noOfViews: index,
+                  imagePath: topHeadlines[index]['urlToImage'] ??
+                      'https://picsum.photos/400?random=$index');
+            },
+          ),
+          /*********************/
+      ),
+    );
   }
 
   Future<void> getTopHeadlines() async {
@@ -83,5 +85,4 @@ class _FrmTestApiState extends State<FrmTestApi> {
       );
     }
   }
-
 }

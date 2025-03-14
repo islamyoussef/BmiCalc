@@ -8,7 +8,9 @@ class CustomSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Section Title
-    return Row(children: [
+    return Row(
+
+        children: [
       const Icon(Icons.arrow_right_rounded),
       Text(
         sectionTitle.toString(),

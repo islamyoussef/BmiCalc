@@ -18,10 +18,13 @@ class _FrmHomeNewsState extends State<FrmHomeNews> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.customAppbar(),
+      // AppBar
+      appBar: CustomAppBar.customAppbar(context,false),
+
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(children: [
+
           // Section title [Categories]
           const CustomSectionTitle(sectionTitle: 'Categories'),
 
@@ -80,17 +83,19 @@ class _FrmHomeNewsState extends State<FrmHomeNews> {
           //CustomListNews()
           /*********************/
 
+          // Get dynamic news from API
           TextButton(
               style: ButtonStyle(
-                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.orange),
                 overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                      (Set<WidgetState> states) {
+                      (Set<WidgetState> states)
+                  {
                     if (states.contains(WidgetState.hovered)) {
-                      return Colors.blue.withValues();
+                      return Colors.grey.withValues();
                     }
                     if (states.contains(WidgetState.focused) ||
                         states.contains(WidgetState.pressed)) {
-                      return Colors.blue.withValues();
+                      return Colors.deepOrangeAccent.withValues();
                     }
                     return null; // Defer to the widget's default.
                   },
