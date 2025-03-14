@@ -5,6 +5,7 @@ import 'package:blackhourses/lecture5_tasks/frm_lec5_Home.dart';
 import 'package:blackhourses/lecture5_tasks/frm_lec5_voca_family.dart';
 import 'package:blackhourses/lecture6_tasks/frm_bmi.dart';
 import 'package:blackhourses/lecture6_tasks/frm_bmi_result.dart';
+import 'package:blackhourses/lecture7_tasks/frm_test_api.dart';
 import 'package:flutter/material.dart';
 import 'home_navigator.dart';
 import 'lecture5_tasks/frm_lec5_voca_colors.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff24263B)),
         useMaterial3: true,
       ),
-      initialRoute: '/Navigator',
+      initialRoute: '/FrmTestApi',
       routes: {
         '/Navigator' : (context) => const FrmNavigator(),
 
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         //'/Lec6BmiResult' : (context) => const FrmBmiResult(),
 
         '/Lec7HomeNews' : (context) => const FrmHomeNews(),
+        '/FrmTestApi' : (context) => const FrmTestApi(),
       },
       //home: const MyHomePage(title: 'Lecture 4 - Task 4-4'),
       home: const FrmLec5Home(),
