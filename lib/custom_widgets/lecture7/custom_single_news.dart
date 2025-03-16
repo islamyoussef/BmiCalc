@@ -1,25 +1,32 @@
-import 'package:blackhourses/custom_widgets/lecture7/custom_author_avatar.dart';
-import 'package:blackhourses/lecture7_tasks/frm_news_details.dart';
+import 'package:blackhourses/models/news_cloud_models/article.dart';
 import 'package:flutter/material.dart';
 
-class CustomSingleNews extends StatelessWidget {
-   const CustomSingleNews(
-      {super.key,
-      required this.title,
-      required this.details,
-      required this.authorName,
-      required this.noOfComments,
-      required this.noOfViews,
-      required this.imagePath,
-      this.authorImage = 'assets/images/islam.jpg'});
+import '../../lecture7_tasks/frm_news_details.dart';
+import 'custom_author_avatar.dart';
 
-  final String? title;
-   final String? details;
-   final String? authorName;
-   final int noOfComments;
-   final int noOfViews;
-   final String? imagePath;
-   final String? authorImage; //= 'assets/images/islam.jpg';
+class CustomSingleNews extends StatelessWidget {
+
+  const CustomSingleNews({super.key,required this.article});
+
+  //  const CustomSingleNews(
+  //     {super.key,
+  //     required this.title,
+  //     required this.details,
+  //     required this.authorName,
+  //     required this.noOfComments,
+  //     required this.noOfViews,
+  //     required this.imagePath,
+  //     this.authorImage = 'assets/images/islam.jpg'});
+  //
+  // final String? title;
+  //  final String? details;
+  //  final String? authorName;
+  //  final int noOfComments;
+  //  final int noOfViews;
+  //  final String? imagePath;
+  //  final String? authorImage; //= 'assets/images/islam.jpg';
+
+  final Article article;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +46,10 @@ class CustomSingleNews extends StatelessWidget {
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
-                //image: DecorationImage(image: AssetImage('assets/images/islam.jpg'), fit: BoxFit.fill),
-                //image: const DecorationImage(image: NetworkImage('https://placehold.co/150x150/png'), fit: BoxFit.fill),
                 image: DecorationImage(
                     image: NetworkImage(
-                        imagePath ?? 'https://picsum.photos/400?random=1'),
+                        article.urlToImage.toString()
+                    ),
                     fit: BoxFit.fill),
               ),
             ),
@@ -55,21 +61,23 @@ class CustomSingleNews extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FrmNewsDetails(
-                                title: title ?? '',
-                                details: details ?? '',
-                                noOfComments: noOfComments ?? 0,
-                                noOfViews: noOfViews ?? 0,
-                                imagePath: imagePath ?? 'https://picsum.photos/400?random=1',
-                                authorName: authorName ?? 'Islam A,Youssef',
-                                authorImage: authorImage ?? 'assets/images/islam.jpg'),
-                          ));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => FrmNewsDetails(article:
+                        Article(
+                          author: article.author,
+                                      title: article.title ,
+                                      description: article.description,
+                                      url: '',
+                                      urlToImage:  article.urlToImage.toString() ,
+                                      publishedAt: article.publishedAt ,
+                                      content: article.content,
+                                      source: article.source)
+                        )
+                        ,) );
                     },
                     child: Text(
-                      title ?? 'No Title Loaded',
+                      article.title ?? 'No Title Loaded',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -77,22 +85,15 @@ class CustomSingleNews extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(
-                    height: 5,
-                  ),
-
-                  // Author Avatar
-                  CustomAuthorAvatar(authorName: 'Islam A,Youssef', authorImagePath: authorImage.toString()),
-
-                  const SizedBox(
-                    height: 5,
-                  ),
+                 // Author Avatar article.publishedAt ??
+                  CustomAuthorAvatar(publishedAt:  DateTime.now(), authorName: article.author, authorImagePath: 'assets/images/islam.jpg'),
 
                   // Details
                   Text(
                     textAlign: TextAlign.justify,
                     maxLines: 3,
-                    details == null ? 'No Details Loaded yet' : '$details ...',
+                    overflow: TextOverflow.ellipsis,
+                    article.content ?? 'No Details Loaded yet',
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 15,
@@ -103,13 +104,15 @@ class CustomSingleNews extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 7,),
+
             // Icons
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(
                         Icons.favorite_border_outlined,
@@ -129,21 +132,21 @@ class CustomSingleNews extends StatelessWidget {
                   ),
                   Row(children: [
                     Text(
-                      '$noOfComments Comments',
-                      style: const TextStyle(
+                      '0 Comments',
+                      style: TextStyle(
                           color: Colors.black45,
                           fontSize: 13,
                           fontWeight: FontWeight.w700),
                     ),
-                    const SizedBox(width: 15),
-                    const Icon(
+                    SizedBox(width: 15),
+                    Icon(
                       Icons.remove_red_eye,
                       size: 13,
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: 5),
                     Text(
-                      '$noOfViews views',
-                      style: const TextStyle(
+                      '0 views',
+                      style: TextStyle(
                           color: Colors.black45,
                           fontSize: 13,
                           fontWeight: FontWeight.w700),

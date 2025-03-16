@@ -1,8 +1,15 @@
 import 'package:blackhourses/custom_widgets/lecture7/custom_appbar.dart';
+import 'package:blackhourses/custom_widgets/lecture7/custom_category.dart';
 import 'package:blackhourses/custom_widgets/lecture7/custom_section_title.dart';
+import 'package:blackhourses/ihelper/local_var.dart';
+import 'package:blackhourses/models/news_cloud_models/article.dart';
 import 'package:blackhourses/models/news_cloud_models/news_category.dart';
 import 'package:flutter/material.dart';
+import '../custom_widgets/lecture7/custom_bottom_nav_bar.dart';
 import '../custom_widgets/lecture7/custom_single_news.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class FrmHomeNews extends StatefulWidget {
   const FrmHomeNews({super.key});
@@ -14,170 +21,109 @@ class FrmHomeNews extends StatefulWidget {
 class _FrmHomeNewsState extends State<FrmHomeNews> {
 
   List<NewsCategory> listOfCats = NewsCategory.getListOfNewsCategories();
+  List<dynamic> topHeadlines = [];
+  int noOfNews = 0;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getTopHeadlines();
+    noOfNews = topHeadlines.length;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBar
-      appBar: CustomAppBar.customAppbar(context,false),
+      appBar: CustomAppBar.customAppbar(context, false),
 
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: ListView(children: [
-
+        child: Column(children: [
           // Section title [Categories]
           const CustomSectionTitle(sectionTitle: 'Categories'),
 
-          // Horizontal carousel
+          // Horizontal carousel [listView]
           SizedBox(
             height: 150,
-            child: CarouselView(
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemExtent: double.infinity,
-              children: List<Widget>.generate(listOfCats.length, (int index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    //image: DecorationImage(image: AssetImage('assets/images/islam.jpg'), fit: BoxFit.fill),
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            //'https://picsum.photos/200?random=$index'
-                            listOfCats[index].catImagePath
-                            ),
-                        fit: BoxFit.fill),
-                  ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                              color: Color.fromRGBO(0, 0, 0, 0.5) // Specifies the background color and the opacity
-                          ),
-                          child: Center(
-                            child: Text(
-                              listOfCats[index].catName.toString(),
-                              style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700
-                            ),),
-                          ),
-                        ),
-
-                      ]),
-                );
-              }),
+              itemCount: listOfCats.length,
+              itemBuilder: (context, index) {
+                return CustomCategory(category: listOfCats[index]);
+              },
             ),
           ),
 
           // Section title [Top Headlines]
-          const CustomSectionTitle(sectionTitle: 'Top Headlines'),
+          CustomSectionTitle(sectionTitle: 'Top Headlines [${noOfNews.toString() ?? ''}]'),
 
-          // static list of news
-          fetchStatic(),
-
-          /*********************/
-          //CustomListNews()
-          /*********************/
+          // Top Headlines
+          Expanded(
+            child: ListView.builder(
+              itemCount: topHeadlines.length,
+              itemBuilder: (context, index) {
+                //Text('${topHeadlines[index]['title']}');
+                return CustomSingleNews(
+                    article: Article(
+                        title:
+                            topHeadlines[index]['title'] ?? 'No Title Loaded',
+                        author: topHeadlines[index]['author'] ??
+                            'No Author Name Loaded',
+                        content: topHeadlines[index]['content'] ??
+                            'No Content Loaded',
+                        description: topHeadlines[index]['description'] ??
+                            'No description Loaded',
+                        url: topHeadlines[index]['url'] ?? 'No Url Loaded',
+                        source: Source(id: '0', name: 'yahoo news'),
+                        publishedAt:
+                            DateTime.parse(topHeadlines[index]['publishedAt']),
+                        urlToImage: topHeadlines[index]['urlToImage'] ??
+                            'https://placehold.co/150x150/png'));
+              },
+            ),
+          ),
 
           // Get dynamic news from API
-          TextButton(
-              style: ButtonStyle(
-                foregroundColor: WidgetStateProperty.all<Color>(Colors.orange),
-                overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                      (Set<WidgetState> states)
-                  {
-                    if (states.contains(WidgetState.hovered)) {
-                      return Colors.grey.withValues();
-                    }
-                    if (states.contains(WidgetState.focused) ||
-                        states.contains(WidgetState.pressed)) {
-                      return Colors.deepOrangeAccent.withValues();
-                    }
-                    return null; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/FrmTestApi');
-              }, child: const Text('Dynamic Data'),
-
-          )
-
         ]),
       ),
+
+      bottomNavigationBar:
+      const CustomBottomNavBar(),
     );
   }
 
-  Widget fetchStatic() {
-    return const Column(
-      children: [
-        // News 1
-        CustomSingleNews(
-          title:
-              'Russia reportedly presents demands that need to be met to end war in Ukraine',
-          details:
-              'Russia has laid out a list of demands to U.S. authorities that need to be met in order for the war in Ukraine to end, Reuters reported',
-          authorName: 'Islam A,Youssef',
-          //authorImage: 'assets/images/islam.jpg',
-          noOfComments: 522,
-          noOfViews: 10000,
-          imagePath: 'https://picsum.photos/200?random=22',
-        ),
-
-        // News 2
-        CustomSingleNews(
-          title: 'Gazprom\'s grandeur fades as Europe abandons Russian gas',
-          details:
-              'When the CEO of Russian state gas giant Gazprom opened a lavish building in St Petersburg to house the company\'s export arm 11 years ago',
-          authorName: 'Islam A,Youssef',
-          //authorImage: 'assets/images/islam.jpg',
-          noOfComments: 120,
-          noOfViews: 1000,
-          imagePath: 'https://picsum.photos/200?random=12',
-        ),
-
-        // News 3
-        CustomSingleNews(
-          title:
-              'Musk’s layoffs shrink workforce needed to realize Trump’s energy agenda',
-          details:
-              'The mass layoffs of federal workers have slowed the government’s ability to permit some new energy projects in a',
-          authorName: 'Islam A,Youssef',
-          //authorImage: 'assets/images/islam.jpg',
-          noOfComments: 50,
-          noOfViews: 800,
-          imagePath: 'https://picsum.photos/200?random=13',
-        ),
-
-        // News 4
-        CustomSingleNews(
-          title:
-              'UN experts accuse Israel of genocidal acts and sexual violence in Gaza',
-          details:
-              'Israel carried out "genocidal acts" against Palestinians by systematically destroying women\'s healthcare facilities during the',
-          authorName: 'Islam A,Youssef',
-          //authorImage: 'assets/images/islam.jpg',
-          noOfComments: 75,
-          noOfViews: 2000,
-          imagePath: 'https://picsum.photos/200?random=14',
-        ),
-
-        // News 5
-        CustomSingleNews(
-          title: 'US judge orders DOGE, Musk to produce cost-cutting records',
-          details:
-              'A judge has ordered Elon Musk and his Department of Government Efficiency to answer questions describing their efforts to slash federal spending.',
-          authorName: 'Islam A,Youssef',
-          //authorImage: 'assets/images/islam.jpg',
-          noOfComments: 300,
-          noOfViews: 1500,
-          imagePath: 'https://picsum.photos/200?random=15',
-        ),
-      ],
-    );
+  Future<void> getTopHeadlines() async {
+    final url = Uri.parse(
+        '${LocalVar.newsApiEndPoint}/v2/top-headlines?country=us&apiKey=${LocalVar.newsApiKey}');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final jsonData = jsonDecode(body);
+        //print('Conntection Succeeded ......................');
+        //print(jsonData['articles']);
+        //topHeadlines = jsonData['articles'] ;
+        //print(topHeadlines);
+        setState(() {
+          //topHeadlines = jsonData['articles']; //TopHeadlines.fromJson(jsonData) as List ;
+          //topHeadlines = Article.fromJson(jsonData) as List<Article> ;
+          topHeadlines = jsonData['articles'];
+          noOfNews = topHeadlines.length;
+          _isLoading = false;
+          //print('${topHeadlines[0]} Articles Loaded ......................');
+        });
+      } else {
+        //print('Error ......................');
+        throw Exception('Failed to load top headlines.......................');
+      }
+    } catch (ex) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }

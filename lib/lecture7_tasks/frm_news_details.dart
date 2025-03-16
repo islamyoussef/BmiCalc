@@ -1,19 +1,19 @@
 import 'package:blackhourses/custom_widgets/lecture7/custom_appbar.dart';
-import 'package:blackhourses/lecture7_tasks/frm_home_news.dart';
+import 'package:blackhourses/custom_widgets/lecture7/custom_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../custom_widgets/lecture7/custom_author_avatar.dart';
+import '../models/news_cloud_models/article.dart';
 
-class FrmNewsDetails extends StatelessWidget {
-  FrmNewsDetails({super.key, required this.title, required this.details,required this.authorName, required this.noOfComments, required this.noOfViews, required this.imagePath, this.authorImage='assets/images/islam.jpg'});
+class FrmNewsDetails extends StatefulWidget {
+  const FrmNewsDetails({super.key,required this.article});
+  final Article article;
 
-  String title;
-  String details;
-  String authorName;
-  int noOfComments;
-  int noOfViews;
-  String imagePath;
-  String authorImage; //= 'assets/images/islam.jpg';
+  @override
+  State<FrmNewsDetails> createState() => _FrmNewsDetailsState();
+}
+
+class _FrmNewsDetailsState extends State<FrmNewsDetails> {
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +25,7 @@ class FrmNewsDetails extends StatelessWidget {
           children: [
             // News Image
             Container(
+              margin: const EdgeInsets.only(bottom: 7),
               height: 250,
               decoration: BoxDecoration(
                 // color: Colors.orange,
@@ -33,33 +34,29 @@ class FrmNewsDetails extends StatelessWidget {
                     topRight: Radius.circular(10)),
                 image: DecorationImage(
                     image: NetworkImage(
-                      imagePath ?? 'https://picsum.photos/400?random=1'),
+                      widget.article.urlToImage ),
                     fit: BoxFit.fill),
               ),
             ),
 
-            const SizedBox(height: 7),
-
             // Title
             Text(
-              title ?? 'No Title Loaded',
+              widget.article.title ?? 'No Title Loaded',
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.w600),
             ),
 
-            const SizedBox(height: 7),
-
             // Author Avatar
-            CustomAuthorAvatar(authorName: authorName, authorImagePath: authorImage.toString()),
-
-            const SizedBox(height: 7),
+            CustomAuthorAvatar(publishedAt: widget.article.publishedAt?? DateTime.now(),
+                authorName: widget.article.author,authorImagePath: 'assets/images/islam.jpg'),
 
             // Details
             Text(
               textAlign: TextAlign.justify,
-              details ?? 'No Details Loaded yet',
+              widget.article.content ?? 'No Content Loaded yet',
+              maxLines: 15,
               style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 15,
@@ -68,12 +65,12 @@ class FrmNewsDetails extends StatelessWidget {
             ),
 
             // Icons
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(
                         Icons.favorite_border_outlined,
@@ -93,21 +90,21 @@ class FrmNewsDetails extends StatelessWidget {
                   ),
                   Row(children: [
                     Text(
-                      '$noOfComments Comments',
-                      style: const TextStyle(
+                      '0 Comments',
+                      style: TextStyle(
                           color: Colors.black45,
                           fontSize: 13,
                           fontWeight: FontWeight.w700),
                     ),
-                    const SizedBox(width: 15),
-                    const Icon(
+                    SizedBox(width: 15),
+                    Icon(
                       Icons.remove_red_eye,
                       size: 13,
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: 5),
                     Text(
-                      '$noOfViews views',
-                      style: const TextStyle(
+                      '0 views',
+                      style: TextStyle(
                           color: Colors.black45,
                           fontSize: 13,
                           fontWeight: FontWeight.w700),
@@ -116,18 +113,11 @@ class FrmNewsDetails extends StatelessWidget {
                 ],
               ),
             ),
+          ]),
+    ),
 
-            FloatingActionButton.small(onPressed: (){
-              //Navigator.pushNamedAndRemoveUntil(context, , predicate)
-              Navigator.pushNamedAndRemoveUntil(context, '/FrmTestApi', ModalRoute.withName('/'));
-              //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const FrmHomeNews(),), (route) => '',)
-            },
-            child: Icon(Icons.home,color: Colors.deepOrangeAccent,),)
-          ]
-
-        ),
-        /*********************/
-      ),
+    bottomNavigationBar:
+        const CustomBottomNavBar(),
     );
   }
 }

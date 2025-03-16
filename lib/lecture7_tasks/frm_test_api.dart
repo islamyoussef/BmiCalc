@@ -1,11 +1,9 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:blackhourses/custom_widgets/lecture7/custom_appbar.dart';
-import 'package:blackhourses/custom_widgets/lecture7/custom_section_title.dart';
-import 'package:blackhourses/models/news_cloud_models/top_headlines.dart';
+import 'package:blackhourses/models/news_cloud_models/article.dart';
 import 'package:flutter/material.dart';
 import '../custom_widgets/lecture7/custom_single_news.dart';
-import 'package:http/http.dart' as http;
 
 class FrmTestApi extends StatefulWidget {
   const FrmTestApi({super.key});
@@ -30,26 +28,32 @@ class _FrmTestApiState extends State<FrmTestApi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.customAppbar(context,true),
+      appBar: CustomAppBar.customAppbar(context, true),
       body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListView.builder(
-            itemCount: topHeadlines.length,
-            itemBuilder: (context, index) {
-              //Text('${topHeadlines[index]['title']}');
-              return CustomSingleNews(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView.builder(
+          itemCount: topHeadlines.length,
+          itemBuilder: (context, index) {
+            //Text('${topHeadlines[index]['title']}');
+            return CustomSingleNews(
+              article: Article(
                   title: topHeadlines[index]['title'] ?? 'No Title Loaded',
-                  details:
-                      topHeadlines[index]['content'] ?? 'No Content Loaded',
-                  authorName:
+                  author:
                       topHeadlines[index]['author'] ?? 'No Author Name Loaded',
-                  noOfComments: index,
-                  noOfViews: index,
-                  imagePath: topHeadlines[index]['urlToImage'] ??
-                      'https://picsum.photos/400?random=$index');
-            },
-          ),
-          /*********************/
+                  content:
+                      topHeadlines[index]['content'] ?? 'No Content Loaded',
+                  description:
+                      topHeadlines[index]['description'] ?? 'No Content Loaded',
+                  url:
+                      topHeadlines[index]['description'] ?? 'No Content Loaded',
+                  source: Source(id: '0', name: 'yahoo news'),
+                  publishedAt:
+                      DateTime.parse(topHeadlines[index]['publishedAt']),
+                  urlToImage: topHeadlines[index]['urlToImage']),
+            );
+          },
+        ),
+        /*********************/
       ),
     );
   }

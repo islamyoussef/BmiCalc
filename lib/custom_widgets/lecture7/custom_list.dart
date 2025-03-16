@@ -30,13 +30,7 @@ class _CustomListNewsState extends State<CustomListNews> {
       itemCount: topHeadlines.length,
       itemBuilder: (context, index) {
         //Text('${topHeadlines[index]['title']}');
-        return CustomSingleNews(
-            title: topHeadlines[index]['title']?? 'No Title Loaded',
-            details: topHeadlines[index]['content']?? 'No Content Loaded',
-            authorName: topHeadlines[index]['author'] ?? 'No Author Name Loaded',
-            noOfComments: index,
-            noOfViews: index,
-            imagePath: topHeadlines[index]['urlToImage'] ?? 'https://picsum.photos/400?random=$index');
+        return CustomSingleNews(article: topHeadlines[index]);
       },
     );
   }
