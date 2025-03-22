@@ -10,7 +10,7 @@ class NewsCategory{
 
   static List<NewsCategory> getListOfNewsCategories(){
     List<NewsCategory> list = [];
-    list.add(NewsCategory(catID: 1, catName: 'Politics', catImagePath: 'https://picsum.photos/200?random=1'));
+    list.add(NewsCategory(catID: 1, catName: 'politic', catImagePath: 'https://picsum.photos/200?random=1'));
     list.add(NewsCategory(catID: 2, catName: 'Business', catImagePath: 'https://picsum.photos/200?random=2'));
     list.add(NewsCategory(catID: 3, catName: 'Sports', catImagePath: 'https://picsum.photos/200?random=3'));
     list.add(NewsCategory(catID: 4, catName: 'Health', catImagePath: 'https://picsum.photos/200?random=4'));

@@ -63,7 +63,13 @@ class _FrmHomeNewsState extends State<FrmHomeNews> {
 
           // Top Headlines
           Expanded(
-            child: ListView.builder(
+            child: _isLoading? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                color: Colors.orange,
+              ),
+            ) : ListView.builder(
               itemCount: topHeadlines.length,
               itemBuilder: (context, index) {
                 //Text('${topHeadlines[index]['title']}');
@@ -97,6 +103,7 @@ class _FrmHomeNewsState extends State<FrmHomeNews> {
   }
 
   Future<void> getTopHeadlines() async {
+    // https://newsapi.org/v2/top-headlines?country=us&apiKey=0b6db405bfe2467388e47d739fa5bc8d
     final url = Uri.parse(
         '${LocalVar.newsApiEndPoint}/v2/top-headlines?country=us&apiKey=${LocalVar.newsApiKey}');
     try {

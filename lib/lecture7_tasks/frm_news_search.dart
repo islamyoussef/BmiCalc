@@ -85,7 +85,13 @@ class _FrmNewsSearchState extends State<FrmNewsSearch> {
 
           // Search Result
           Expanded(
-            child: ListView.builder(
+            child:  _isLoading? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                color: Colors.orange,
+              ),
+            ) :ListView.builder(
               itemCount: newsSearchResult.length,
               itemBuilder: (context, index) {
                 //Text('${topHeadlines[index]['title']}');

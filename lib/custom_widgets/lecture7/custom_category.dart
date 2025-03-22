@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:blackhourses/lecture7_tasks/frm_news_category.dart';
 import 'package:blackhourses/models/news_cloud_models/news_category.dart';
 import 'package:flutter/material.dart';
 
@@ -25,12 +28,18 @@ class CustomCategory extends StatelessWidget {
           color: const Color.fromRGBO(0, 0, 0, 0.5), // Specifies the background color and the opacity
         ),
         child: Center(
-          child: Text(
-            category.catName.toString(),
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w700),
+          child: InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FrmNewsCategory(categoryName: category.catName.toString()),));
+              //print('........................ ${category.catName.toString()}');
+            },
+            child: Text(
+              category.catName.toString(),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700),
+            ),
           ),
         ),
       ),

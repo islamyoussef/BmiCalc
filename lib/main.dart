@@ -9,12 +9,21 @@ import 'package:blackhourses/lecture7_tasks/frm_news_details.dart';
 import 'package:blackhourses/lecture7_tasks/frm_news_search.dart';
 import 'package:blackhourses/lecture7_tasks/frm_test_api.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'home_navigator.dart';
 import 'lecture5_tasks/frm_lec5_voca_colors.dart';
 import 'lecture5_tasks/frm_lec5_voca_numbers.dart';
 import 'lecture7_tasks/frm_home_news.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // Hive local storage initialization
+  await Hive.initFlutter();
+
+  await Hive.openBox("box_news");
+
   runApp(const MyApp());
 }
 
